@@ -2,18 +2,22 @@
  * Created by Anshi on 2016/12/20.
  */
 //@function 构造函数棋子。
-function Pieces(obj) {
+function Piece(obj) {
   this.color = obj.color; //颜色
-  this.coords = obj.coords; //坐标
+  this.x = obj.x; //坐标
+  this.y = obj.y; //坐标
+  this.row = obj.row;
+  this.column = obj.column;
+  this.player = obj.player;
   //常数
   this.SIZE = 15; //直径15呗
 
 }
-Pieces.prototype = {
+Piece.prototype = {
   checkerboard: null,
   //@argument 需要绘制的画板。
   drawPiece: function (ctx) {
-    ctx.arc(this.coords.x, this.coords.y, this.SIZE, 0, Math.PI * 2, true);
+    ctx.arc(this.x, this.y, this.SIZE, 0, Math.PI * 2, true);
     ctx.fill();
     ctx.closePath();
   },
@@ -31,15 +35,15 @@ Pieces.prototype = {
 }
 
 //@function 构造函数玩家。
-function Player(idx) {
+function Player(idx, pieces) {
   this.index = idx;
-  this.pieces = [];
+  this.pieces = pieces; //为什么参数 指向的是同一个数组对象?
   this.color = idx === 0 ? 'black' : 'red';
 }
 Player.prototype = {
 
-  addPiece: function (pieceObj) {
-    this.pieces.push(pieceObj);
+  addPiece: function (column, row, obj) {
+    this.pieces[column][row] = obj;
   },
   deletePiece: function () {
 
@@ -61,11 +65,11 @@ function Checkerboard(obj) {
   this.height = this.linesNum.column * this.GRID;
   this.id = obj.canvas.id
 
-  this.players = [new Player(0), new Player(1)]; //所有玩家 //默认为2?
-  this.currentPlayer = this.players[0]; //默认初始的当前玩家是idx0的玩家
-
   this.initPieces(); //初始化二维数组棋盘
   this.currentPiece = null; //当前棋子
+
+  this.players = [new Player(0, this.pieces), new Player(1, this.pieces)]; //所有玩家 //默认为2?
+  this.currentPlayer = null; //默认初始的当前玩家是idx0的玩家
 }
 
 Checkerboard.prototype = {
@@ -78,15 +82,10 @@ Checkerboard.prototype = {
   //@function 初始化所有棋子
   //@argument
   initPieces: function () {
-    var _this = this;
     this.pieces = new Array(this.linesNum.column + 1); //所有棋子
-    /*this.pieces.forEach(function (item) {
-     item = [];
-     })*/
     for (let i = 0; i < this.pieces.length; i++) {
       this.pieces[i] = []
     }
-
   },
   //@function 获取绘制上下文。
   getContext: function () {
@@ -116,7 +115,6 @@ Checkerboard.prototype = {
       this.context.lineTo(this.width, this.GRID * i);
       this.context.fillText(i, -10, this.GRID * i);
     }
-    console.log(this.linesNum.row, this.linesNum.column)
     this.context.stroke();
     this.context.closePath();
   },
@@ -124,10 +122,8 @@ Checkerboard.prototype = {
   //@function 画棋子。
   //@argument  {colors:,coords:,Checkerboard:}
   drawPiece: function () {
-    var currentPieceIdx = this.currentPlayer.pieces.length - 1;
-    this.currentPiece.constructorObj = this.currentPlayer.pieces[currentPieceIdx];
-    this.currentPiece.constructorObj.setPiecesStyle(this.context)
-    this.currentPiece.constructorObj.drawPiece(this.context)
+    this.currentPiece.setPiecesStyle(this.context)
+    this.currentPiece.drawPiece(this.context)
   },
   //@function 根据点击的位置(以[棋盘]的左上角为原点,接受负值噢,毕竟还有边线)判断棋子的位置。
   //@argument  x,y
@@ -136,25 +132,24 @@ Checkerboard.prototype = {
     //接受到的坐标 属于哪个点的 + — 20范围内呢,重合则默认选左上
     var row = Math.round(event.x / this.GRID);
     var column = Math.round(event.y / this.GRID);
-    if (this.pieces[column][row]) {
+    if (this.pieces[column][row] || row > this.linesNum.row || column > this.linesNum.column) {
       return false
     }
-    //@todo 上面二者需要判断一下row和col是否合法噢。
+    //@todo 上面二者需要判断一下row和col是否合法噢。[在canvas范围但是不在棋盘范围]
     var x = row * this.GRID;
     var y = column * this.GRID;
     this.pieces[column][row] = {
       color: this.currentPlayer.color,
-      coords: {
-        x: x,
-        y: y
-      }
-    }
-    this.currentPlayer.addPiece(new Pieces(this.pieces[column][row]));
-    this.currentPiece = {
+      x: x,
+      y: y,
       row: row,
       column: column,
       player: this.currentPlayer
-    };
+    }
+
+    var constructPiece = new Piece(this.pieces[column][row]);
+    this.currentPlayer.addPiece(column, row, this.pieces[column][row]);
+    this.currentPiece = constructPiece;
     return true
   },
   changePlayer: function () {
@@ -167,11 +162,13 @@ Checkerboard.prototype = {
   judgePieces: function () {
     var allPossible = ['col', 'row', 'leftSla', 'rightSla'];
     var _this = this;
+    console.warn(this.currentPlayer.pieces)
+    console.warn(this.currentPlayer)
 
-    allPossible.forEach(function (item, idx) {
+    allPossible.forEach(function (item) {
       var point = _this.findLind(item);
       if (point >= 5) {
-        this.gameOver();
+        _this.gameOver();
         return false;
       }
     })
@@ -179,20 +176,19 @@ Checkerboard.prototype = {
   findLind: function (direction) {
     var row = this.currentPiece.row;
     var column = this.currentPiece.column;
-    var player = this.currentPlayer;
-    var piecePlayer = this.currentPiece.player;
+    var pieces = this.currentPlayer.pieces;
     var basePoint = 1;
     switch (direction) {
       case 'col':
         for (let i = 1; i < this.MAXLINE; i++) {
-          if (this.pieces[column + i][row] && player.index === piecePlayer.index) {
+          if (pieces[column + i][row]) {
             basePoint++
           } else {
             break
           }
         }
         for (let i = 1; i < this.MAXLINE; i++) {
-          if (this.pieces[column - i][row] && player.index === piecePlayer.index) {
+          if (pieces[column - i][row]) {
             basePoint++
             if (basePoint === 5) {
               break
@@ -204,14 +200,14 @@ Checkerboard.prototype = {
         break;
       case 'row':
         for (let i = 1; i < this.MAXLINE; i++) {
-          if (this.pieces[column][row + i] && player.index === piecePlayer.index) {
+          if (pieces[column][row + i]) {
             basePoint++
           } else {
             break
           }
         }
         for (let i = 1; i < this.MAXLINE; i++) {
-          if (this.pieces[column][row - i] && player.index === piecePlayer.index) {
+          if (pieces[column][row - i]) {
             basePoint++
             if (basePoint === 5) {
               break
@@ -223,14 +219,14 @@ Checkerboard.prototype = {
         break;
       case 'leftSla':
         for (let i = 1; i < this.MAXLINE; i++) {
-          if (this.pieces[column - i][row - i] && player.index === piecePlayer.index) {
+          if (pieces[column - i][row - i]) {
             basePoint++
           } else {
             break
           }
         }
         for (let i = 1; i < this.MAXLINE; i++) {
-          if (this.pieces[column + i][row + i] && player.index === piecePlayer.index) {
+          if (pieces[column + i][row + i]) {
             basePoint++
             if (basePoint === 5) {
               break
@@ -242,14 +238,14 @@ Checkerboard.prototype = {
         break;
       case 'rightSla':
         for (let i = 1; i < this.MAXLINE; i++) {
-          if (this.pieces[column - i][row + i] && player.index === piecePlayer.index) {
+          if (pieces[column - i][row + i]) {
             basePoint++
           } else {
             break
           }
         }
         for (let i = 1; i < this.MAXLINE; i++) {
-          if (this.pieces[column + i][row - i] && player.index === piecePlayer.index) {
+          if (pieces[column + i][row - i]) {
             basePoint++
             if (basePoint === 5) {
               break
@@ -262,9 +258,9 @@ Checkerboard.prototype = {
     }
     return basePoint;
   },
-  gameOver:function () {
+  gameOver: function () {
     //取消点击事件
     //弹出提示,公布结果
-    this.result = 
+    this.result = "";
   }
 }

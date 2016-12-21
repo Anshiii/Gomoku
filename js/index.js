@@ -29,10 +29,13 @@ window.onload = function () {
       board.init();
       board.offsetTop = board.dom.offsetTop + 20;
       board.offsetLeft = board.dom.offsetLeft + 20;
-      board.currentPlayer = board.players[0];
     },
     methods: {
       addPiece: function (e) {
+
+        //所有棋盘操作之后
+        board.changePlayer();
+
         console.log(e)
         var event = {
           x: e.offsetX - board.offsetLeft,
@@ -42,8 +45,6 @@ window.onload = function () {
           board.drawPiece();
           board.judgePieces();
 
-          //所有棋盘操作之后
-          board.changePlayer();
         }
       }
     }
