@@ -9898,6 +9898,7 @@ var template = Object.freeze({
 
     Vue.util = util;
     Vue.config = config;
+    Vue.config.debug = true
     Vue.set = set;
     Vue['delete'] = del;
     Vue.nextTick = nextTick;

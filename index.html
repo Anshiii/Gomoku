@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script ></script>
+    <link rel="stylesheet" href="style/index.css">
+    <script src="./js/vue.js" async></script>
+    <script src="./js/Checkerboard.js" async></script>
+    <script src="./js/index.js"></script>
 </head>
 <body>
+<section id="vueApp">
+    <canvas v-on:click="addPiece" id="checkerboard" width="{{canvas.width}}" height="{{canvas.height}}"></canvas>
+</section>
 
-</body>
-</html>
