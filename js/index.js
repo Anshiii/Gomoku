@@ -7,44 +7,70 @@ window.onload = function () {
   var vue = new Vue({
     el: '#vueApp',
     data: {
-      gameResult: null,
+      gameResult: {text: '', gameOver: false},
       canvas: {
         width: 550,
         height: 550,
-        id: 'checkerboard'
-      }
+        id: 'checkerboard',
+        piecesID: 'pieces'
+      },
+      test: {}
     },
+    //实例创建后调用
     created: function (e) {
       console.log(e, this)
       board = new Checkerboard({
         canvas: this.canvas
       });
 
-      this.desk = {
-        pieces: board.pieces,
-        players: board.players
-      }
     },
     ready: function () {
       board.ready();
-      board.offsetTop = board.dom.offsetTop + 20;
-      board.offsetLeft = board.dom.offsetLeft + 20;
-      this.gameResult = board.result;
+      board.replay();
     },
     methods: {
       addPiece: function (e) {
+        if (this.gameResult.gameOver) {
+          return
+        }
         //所有棋盘操作之前
         board.changePlayer();
 
+        //20是棋盘固定的边
         var event = {
-          x: e.offsetX - board.offsetLeft,
-          y: e.offsetY - board.offsetTop
+          x: e.offsetX - 20,
+          y: e.offsetY - 20
         }
-        if(board.getPieceCoords(event)){
+        if (board.getPieceCoords(event)) {
           board.drawPiece();
           board.judgePieces();
-
+          if (board.result.gameOver !== this.gameResult.gameOver) {
+            this.gameResult.gameOver = board.result.gameOver;
+            this.gameResult.text = board.result.text;
+          }
         }
+        console.warn(board.pieces)
+
+      },
+      undoPiece: function () {
+        //游戏结束后 也是不能悔棋的噢。。
+        if (this.gameResult.gameOver) {
+          return
+        }
+        //所有棋盘操作之前
+
+        board.undoPiece();
+        console.warn(board.pieces)
+
+      },
+      replay: function () {
+        board.replay();
+        console.warn(board.pieces)
+      },
+      testEvent: function () {
+        board.result.text = "click result"
+        board.result.text2 = "click result2"
+        board.test.app = "clik test"
       }
     }
   });

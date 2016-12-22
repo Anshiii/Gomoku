@@ -1,3 +1,98 @@
-#checkerboard {
-  border: 1px solid #dedede;
-  padding: 5px; }
+.content {
+    display: flex;
+    width: 900px;
+    margin: 0 auto;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.other {
+    width: 250px;
+}
+
+.button--base {
+    line-height: 2;
+    padding: 0 30px;
+    border: none;
+    background-color: transparent;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 15px;
+    color: white;
+    outline: none;
+}
+.button--base:hover{
+
+}
+
+/*æ¸¸æˆæè¿°*/
+.game__des {
+    text-align: center;
+    border: 1px solid #1B9AF7;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    padding: 10px 5px;
+    color: #1B9AF7;
+}
+
+.des__title {
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.des__content {
+    font-size: 16px;
+    line-height: 1.4;
+    padding: 5px 15px;
+    text-indent: 37px;
+    text-align: left;
+}
+
+/*æ¸¸æˆæè¿°---*/
+
+/*æ¸¸æˆåŠ¨ä½œ*/
+.game__action {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.action__start {
+    background-color: #FEAE1B;
+    border-color: #FEAE1B;
+}
+
+.action__replay {
+    background-color: #A5DE37;
+    border-color: #A5DE37;
+}
+.action__undo{
+    background-color: #A63E39;
+    border-color: #A63E39;
+    margin-top: 20px;
+}
+
+/*æ¸¸æˆåŠ¨ä½œ---*/
+
+p.result__text {
+    height: 16px;
+    color: #8c58de;
+    line-height: 1.5;
+    font-size: 16px;
+    text-align: center;
+}
+
+/*canvas*/
+.canvasWrap{
+    position: relative;
+}
+canvas{
+    position: absolute;
+}
+#checkerboard{
+    z-index: 1;
+}
+#pieces{
+    z-index: 2;
+}
+/*canvas---*/

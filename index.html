@@ -4,12 +4,34 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="style/index.css">
-    <script src="./js/vue.js" async></script>
-    <script src="./js/Checkerboard.js" async></script>
+    <script src="./js/vue.js" ></script>
+    <script src="./js/Checkerboard.js"></script>
     <script src="./js/index.js"></script>
 </head>
 <body>
 <section id="vueApp">
-    <canvas v-on:click="addPiece" id="checkerboard" width="{{canvas.width}}" height="{{canvas.height}}"></canvas>
+    <div class="content">
+        <div class="other">
+            <div class="game__des">
+                <div class="des__title">游戏规则说明</div>
+                <div class="des__content">五子棋是一种两人对弈的纯策略型棋类游戏，通常双方分别使用黑白两色的棋子，下在棋盘直线与横线的交叉点上，先形成五子连线者获胜。</div>
+            </div>
+           <div class="game__action">
+               <button @click.stop="replay" class="button--base action__replay">重玩</button>
+
+               <button class="button--base action__start">开始</button>
+               <button v-on:click.stop="undoPiece" class="button--base action__undo">悔棋</button>
+           </div>
+
+            <p v-if="gameResult.gameOver" class="result__text">Game over!!! {{gameResult.text}}</p>
+        </div>
+
+        <div class="canvasWrap" v-bind:style="{width:canvas.width+'px',height:canvas.height+'px'}">
+            <canvas  id="checkerboard" width="{{canvas.width}}"
+                    height="{{canvas.height}}"></canvas>
+            <canvas  @click.stop="addPiece" id="pieces" width="{{canvas.width}}"
+                    height="{{canvas.height}}"></canvas>
+        </div>
+    </div>
 </section>
 
