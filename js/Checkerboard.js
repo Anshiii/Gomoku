@@ -41,7 +41,6 @@ function Player(idx, pieces) {
   this.color = idx === 0 ? 'black' : 'red';
 }
 Player.prototype = {
-
   addPiece: function (column, row, obj) {
     this.pieces[column][row] = obj;
   },
@@ -56,6 +55,7 @@ function Checkerboard(obj) {
   //常量
   this.GRID = 40; //每一格子的宽度
   this.MAXLINE = 5; //最大连线数
+  this.PLAYERNUM = 2; //默认两玩家
 
   this.linesNum = {
     row: Math.floor((obj.canvas.width - 40) / this.GRID),
@@ -65,26 +65,36 @@ function Checkerboard(obj) {
   this.height = this.linesNum.column * this.GRID;
   this.id = obj.canvas.id
 
-  this.initPieces(); //初始化二维数组棋盘
+  this.pieces = this.create2DArray(this.linesNum.column + 1, this.linesNum.row + 1); //初始化二维数组棋盘
   this.currentPiece = null; //当前棋子
 
-  this.players = [new Player(0, this.pieces), new Player(1, this.pieces)]; //所有玩家 //默认为2?
+  this.players = new Array(this.PLAYERNUM); //所有玩家 //默认为2?
   this.currentPlayer = null; //默认初始的当前玩家是idx0的玩家
+
+  this.result = null;//游戏结果指针
 }
 
 Checkerboard.prototype = {
   //@function 基础操作。
   //@argument
-  init: function () {
+  ready: function () {
     this.getContext();
     this.drawCheckerboard();
+    this.initPlayers();
   },
   //@function 初始化所有棋子
   //@argument
-  initPieces: function () {
-    this.pieces = new Array(this.linesNum.column + 1); //所有棋子
-    for (let i = 0; i < this.pieces.length; i++) {
-      this.pieces[i] = []
+  create2DArray: function (col) {
+    var arr = [];
+    arr = new Array(col); //所有棋子
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] =[];
+    }
+    return arr;
+  },
+  initPlayers: function () {
+    for (let i = 0; i < this.players.length; i++) {
+      this.players[i] = new Player(i, this.create2DArray(this.linesNum.column + 1, this.linesNum.row + 1))
     }
   },
   //@function 获取绘制上下文。
@@ -162,8 +172,8 @@ Checkerboard.prototype = {
   judgePieces: function () {
     var allPossible = ['col', 'row', 'leftSla', 'rightSla'];
     var _this = this;
-    console.warn(this.currentPlayer.pieces)
-    console.warn(this.currentPlayer)
+/*    console.warn(this.currentPlayer.pieces)
+    console.warn(this.currentPlayer)*/
 
     allPossible.forEach(function (item) {
       var point = _this.findLind(item);
@@ -261,6 +271,7 @@ Checkerboard.prototype = {
   gameOver: function () {
     //取消点击事件
     //弹出提示,公布结果
-    this.result = "";
+    this.result = this.currentPlayer; //赢家对象
+    console.log("result赋值了啊。。gameresult不跟着变吗")
   }
 }
