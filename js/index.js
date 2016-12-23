@@ -27,30 +27,37 @@ window.onload = function () {
     ready: function () {
       board.ready();
       board.replay();
+
     },
     methods: {
       addPiece: function (e) {
-        if (this.gameResult.gameOver) {
-          return
-        }
-        //所有棋盘操作之前
-        board.changePlayer();
-
-        //20是棋盘固定的边
-        var event = {
-          x: e.offsetX - 20,
-          y: e.offsetY - 20
-        }
-        if (board.getPieceCoords(event)) {
-          board.drawPiece();
-          board.judgePieces();
-          if (board.result.gameOver !== this.gameResult.gameOver) {
-            this.gameResult.gameOver = board.result.gameOver;
-            this.gameResult.text = board.result.text;
+        var _this = this;
+        if(!this.addPieceEventRuning){
+          if (this.gameResult.gameOver) {
+            return
           }
-        }
-        console.warn(board.pieces)
+          //防止快速点击
 
+          //所有棋盘操作之前
+          this.addPieceEventRuning = true;
+          board.changePlayer();
+
+          //20是棋盘固定的边
+          var event = {
+            x: e.offsetX - 20,
+            y: e.offsetY - 20
+          }
+          //如果点的是有棋子的地方
+          if (board.getPieceCoords(event)) {
+            board.drawPiece();
+            board.judgePieces();
+            if (board.result.gameOver !== this.gameResult.gameOver) {
+              this.gameResult.gameOver = board.result.gameOver;
+              this.gameResult.text = board.result.text;
+            }
+          }
+          setTimeout(function(){_this.addPieceEventRuning = false},500)
+        }
       },
       undoPiece: function () {
         //游戏结束后 也是不能悔棋的噢。。
@@ -58,14 +65,15 @@ window.onload = function () {
           return
         }
         //所有棋盘操作之前
-
         board.undoPiece();
         console.warn(board.pieces)
 
       },
       replay: function () {
         board.replay();
-        console.warn(board.pieces)
+        console.warn(board.pieces);
+        this.gameResult.gameOver = board.result.gameOver;
+        this.gameResult.text = board.result.text;
       },
       testEvent: function () {
         board.result.text = "click result"

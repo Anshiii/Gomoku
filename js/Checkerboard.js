@@ -66,13 +66,6 @@ function Checkerboard(obj) {
   this.id = obj.canvas.id;
   this.piecesID = obj.canvas.piecesID;
 
-
-
-
-  this.result = {
-    gameOver: false,
-    text: ''
-  }; //游戏结果指针
 }
 
 Checkerboard.prototype = {
@@ -107,6 +100,11 @@ Checkerboard.prototype = {
     }
     this.currentPiece = null; //当前棋子
     this.currentPlayer = null; //默认初始的当前玩家是idx0的玩家
+    this.result = {
+      gameOver: false,
+      text: ''
+    }; //游戏结果指针
+
   },
   //@function 清空画布
   initCanvas:function () {
