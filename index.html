@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="style/index.css">
-    <script src="./js/vue.js"></script>
-    <script src="./js/Checkerboard.js"></script>
-    <script src="./js/index.js"></script>
+    <link rel="stylesheet" href="/style/index.css">
+    <script src="/js/vue.js"></script>
+    <script src="/js/Checkerboard.js"></script>
+    <script src="/js/index.js"></script>
 </head>
 <body>
 <section id="vueApp">
@@ -19,7 +19,7 @@
             <div class="game__action">
                 <button @click.stop="replay" class="button--base action__replay">重玩</button>
 
-                <button class="button--base action__start">开始</button>
+                <button v-on:click.stop="newGame" class="button--base action__start">开始</button>
                 <button v-on:click.stop="undoPiece" class="button--base action__undo">悔棋</button>
             </div>
 

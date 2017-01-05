@@ -27,7 +27,7 @@ Piece.prototype = {
   },
   //@function 删除这个棋子?撤销?。。。
   undoPiece: function (ctx) {
-    ctx.clearRect(this.x - this.SIZE , this.y - this.SIZE , this.SIZE*2, this.SIZE*2);
+    ctx.clearRect(this.x - this.SIZE, this.y - this.SIZE, this.SIZE * 2, this.SIZE * 2);
   },
   selected: function () {
     this.disabled = false; //被选中啦
@@ -66,12 +66,14 @@ function Checkerboard(obj) {
   this.id = obj.canvas.id;
   this.piecesID = obj.canvas.piecesID;
 
+  this.addPieceIng = false;//棋盘的状态,被下棋中,非。
+
 }
 
 Checkerboard.prototype = {
   //@function 重玩。清楚棋盘数据和玩家数据即可
   //@argument
-  replay:function () {
+  replay: function () {
     this.initDesk();
     this.initCanvas();
   },
@@ -92,7 +94,7 @@ Checkerboard.prototype = {
     return arr;
   },
   //@function 清空桌面
-  initDesk:function () {
+  initDesk: function () {
     this.pieces = this.create2DArray(this.linesNum.column + 1, this.linesNum.row + 1); //初始化二维数组棋盘
     this.players = new Array(this.PLAYERNUM); //所有玩家 //默认为2?
     for (let i = 0; i < this.players.length; i++) {
@@ -107,8 +109,8 @@ Checkerboard.prototype = {
 
   },
   //@function 清空画布
-  initCanvas:function () {
-    this.piecesContext.clearRect(0,0,this.width,this.height)
+  initCanvas: function () {
+    this.piecesContext.clearRect(0, 0, this.width, this.height)
   },
   //@function 获取绘制上下文。
   getContext: function () {
@@ -158,15 +160,19 @@ Checkerboard.prototype = {
     this.currentPiece.drawPiece(this.piecesContext)
   },
   //@function 悔棋
-  undoPiece:function () {
+  undoPiece: function () {
     var row = this.currentPiece.row;
     var column = this.currentPiece.column;
     var pieces = this.currentPlayer.pieces;
-    this.currentPiece.undoPiece(this.piecesContext);
-    //清空player和桌面的pieces
-    delete this.pieces[column][row];
-    delete pieces[column][row];
-    this.changePlayer();
+    if(this.pieces[column][row] && pieces[column][row]){
+      this.currentPiece.undoPiece(this.piecesContext);
+      //清空player和桌面的pieces
+      delete this.pieces[column][row];
+      delete pieces[column][row];
+      this.changePlayer();
+    }else{
+      alert('您已经悔过棋了')
+    }
   },
   //@function 根据点击的位置(以[棋盘]的左上角为原点,接受负值噢,毕竟还有边线)判断棋子的位置。
   //@argument  x,y
@@ -338,5 +344,19 @@ Checkerboard.prototype = {
   //@return  返回布尔值,true代表超范围啦
   judgeNumIsOverRange: function (num, a, b) {
     return num < a || num > b
+  },
+  addPiece: function (event) {
+    if (!this.addPieceIng && this.result.gameOver !== true) {
+      this.addPieceIng = true;
+      this.changePlayer();
+      if (this.getPieceCoords(event)) {
+        this.drawPiece();
+        this.judgePieces();
+      } else {
+        alert('请勿重复下子🙃')
+        this.changePlayer();
+      }
+      this.addPieceIng = false;
+    }
   }
 }
