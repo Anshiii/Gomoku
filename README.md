@@ -1,16 +1,8 @@
-# goLang
+# Gomoku
+
+##Gomoku is an abstract strategy board game. Also called Gobang or Five in a Row, it is traditionally played with Go pieces (black and white stones) on a go board with 19x19 (15x15) intersections.
 
 
-canvas实现的五子棋（后来发现没什么dom操作用vue有必要吗...从微信小应用开始就没怎么操作过dom了，感觉真不错....）
+code by canvas.
 
-
-
-过几天添加在线联机对战功能！！...
-如果能写出ai来就好了...
-
-还想学习webGL写出辉煌蓬勃的五子棋来 哈哈哈哈  
-
-
-
-######题外话
-关于名称的话Gobang错记成lang了...但是这个名字也很好看...就不改了。麻烦
+Will add mod for battling via node.js and socket.io in the future.
