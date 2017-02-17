@@ -41,8 +41,8 @@ app.use(session({
 
 
 //打开主页
-app.get('/goLang', function (req, res) {
-  console.log(__dirname) //根路径/Users/Anshi/WebstormProjects/Train/goLang
+app.get('/gomoku', function (req, res) {
+  console.log(__dirname) //根路径/Users/Anshi/WebstormProjects/Train/gomoku
   //req.sessionID = session.id
   //*来的cookie带sid 中间件就能使req获得对应的session对象,和对应的状态*
   if (req.session.isVisit) {
@@ -56,7 +56,7 @@ app.get('/goLang', function (req, res) {
 })
 
 //检查登录状态
-app.get('/goLang/user', function (req, res) {
+app.get('/gomoku/user', function (req, res) {
   //存在cookie
   var loginid = req.session.login__identify;
   if (req.session.login__identify === 1&& req.session.username) {
@@ -74,7 +74,7 @@ app.get('/goLang/user', function (req, res) {
 var jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({extended: false})
 //用户登录
-app.post('/goLang/user', urlencodedParser, function (req, res) {
+app.post('/gomoku/user', urlencodedParser, function (req, res) {
   //@todo 话说这里 如果是已经登录的状态,又过来调用这个接口呢?
   //拿到用户名后验证密码。(@todo 这里是否需要对输入框内容进行过滤
   if (!req.body) return res.sendStatus(400)
@@ -99,7 +99,7 @@ app.post('/api/users', jsonParser, function (req, res) {
 
 
 //游客登录
-app.post('/goLang/guest', function (req, res, next) {
+app.post('/gomoku/guest', function (req, res, next) {
   //点击游客登录,返回基本信息。
   if (req.session.login__identify === -1) {
     var guestname = `guest${uuidV1()}`;
@@ -115,7 +115,7 @@ app.post('/goLang/guest', function (req, res, next) {
 })
 
 //用户注册
-app.post('/goLang/register', urlencodedParser, function (req, res) {
+app.post('/gomoku/register', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
   var un = req.body.un;
   var pw = req.body.pw;
@@ -127,7 +127,8 @@ app.post('/goLang/register', urlencodedParser, function (req, res) {
   res.send({stat: 1, msg: '注册成功'})
 })
 
-app.get('/goLang/newGame', function (req, res) {
+
+app.get('/gomoku/room', function (req, res) {
 
 })
 app.post('/piece', function () {

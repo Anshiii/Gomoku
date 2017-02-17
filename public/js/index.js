@@ -92,7 +92,7 @@ window.onload = function () {
       guestLogin: function () {
         //告诉服务器 生成一个游客的sessionId来。 放在cookie里。
         $.ajax({
-          url: '/goLang/guest',
+          url: '/gomoku/guest',
           method: 'GET',
           success: function (json) {
             if (json && json.stat === 1) {
@@ -112,7 +112,7 @@ window.onload = function () {
        document.cookie = 'session=2333';
        $.ajax({
        async: false,
-       url: '/goLang/user',
+       url: '/gomoku/user',
        method: 'GET',
        success: function (json) {
        if (json && json.stat === 1&&json.data) {
@@ -127,7 +127,7 @@ window.onload = function () {
         var _this = this;
 
         $.ajax({
-          url: '/goLang/user',
+          url: '/gomoku/user',
           method: 'GET',
           success: function (json) {
             if (json && json.stat === 1 && json.data) {
@@ -150,7 +150,7 @@ window.onload = function () {
           return "帐号或密码不能为空"
         }
         $.ajax({
-          url: '/goLang/user',
+          url: '/gomoku/user',
           method: 'POST',
           data: data,
           success: function (json) {
@@ -173,7 +173,7 @@ window.onload = function () {
           return "帐号或密码不能为空"
         }
         $.ajax({
-          url: '/goLang/register',
+          url: '/gomoku/register',
           method: 'POST',
           data: data,
           success: function (json) {

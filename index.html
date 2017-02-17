@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <!--<base href="http://www.anshimm.site/goLangOnline">-->
+    <!--<base href="http://www.anshimm.site/gomokuOnline">-->
     <link rel="stylesheet" href="style/index.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -24,7 +24,7 @@
 
             <div class="game__profile">
                 <div v-if="!user.signIn" class="profile--logout">
-                    <form method="post" class="profile__form" action="/goLang/user" v-on:submit.prevent="login">
+                    <form method="post" class="profile__form" action="/gomoku/user" v-on:submit.prevent="login">
                         <input id="pro-un" type="text" name="un">
                         <input id="pro-pw" type="password" name="pw">
                         <button  type="submit" class="button--base action__login">登录</button>
