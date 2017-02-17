@@ -3,26 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/style/index.css">
-    <script src="/plugin/vue.js"></script>
-    <script src="/plugin/jquery-3.1.1.min.js"></script>
-    <script src="/js/Checkerboard.js"></script>
-    <script src="/js/index.js"></script>
+    <!--<base href="http://www.anshimm.site/goLangOnline">-->
+    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="plugin/vue.js"></script>
+    <script src="plugin/jquery-3.1.1.min.js"></script>
+    <script src="js/Checkerboard.js"></script>
+    <script src="js/index.js"></script>
+
 </head>
 <body>
 <section id="vueApp">
     <div class="content">
         <div class="other">
             <div class="game__des">
-                <div class="des__title">游戏规则说明</div>
-                <div class="des__content">五子棋是一种两人对弈的纯策略型棋类游戏，通常双方分别使用黑白两色的棋子，下在棋盘直线与横线的交叉点上，先形成五子连线者获胜。</div>
+                <div  class="des__title">游戏规则说明</div>
+                <div  class="des__content">五子棋是一种两人对弈的纯策略型棋类游戏，通常双方分别使用黑白两色的棋子，下在棋盘直线与横线的交叉点上，先形成五子连线者获胜。</div>
             </div>
-            <div class="game__action">
-                <button @click.stop="replay" class="button--base action__replay">重玩</button>
 
+            <div class="game__profile">
+                <div v-if="!user.signIn" class="profile--logout">
+                    <form method="post" class="profile__form" action="/goLang/user" v-on:submit.prevent="login">
+                        <input id="pro-un" type="text" name="un">
+                        <input id="pro-pw" type="password" name="pw">
+                        <button  type="submit" class="button--base action__login">登录</button>
+                    </form>
+                    <button v-on:click.stop="register" class="button--base action__register">注册</button>
+                    <button v-on:click.stop="guestLogin" class="button--base action__guest">游客登录</button>
+                </div>
+                <div v-else class="profile--profile">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <td>{{user.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Win-percent</th>
+                            <td>{{user.win_percentage}}</td>
+                        </tr>
+                        <tr>
+                            <th>Total-num</th>
+                            <td>{{user.total_num}}</td>
+                        </tr>
+                    </table>
+
+                </div>
+
+            </div>
+            <button>单机游戏</button>
+            <button v-on:click.stop="joinRoom">多人游戏</button>
+            <div class="game__action--single">
+                <button @click.stop="replay" class="button--base action__replay">重玩</button>
                 <button v-on:click.stop="newGame" class="button--base action__start">开始</button>
                 <button v-on:click.stop="undoPiece" class="button--base action__undo">悔棋</button>
             </div>
+            <div class="game__action--multiplay">
+                <button v-on:click.stop="newGame_multi" class="button--base action__start">开始</button>
+                <button v-on:click.stop="undoPiece_multi" class="button--base action__undo">悔棋</button>
+            </div>
+
+
+
 
             <p v-if="gameResult.gameOver" class="result__text">Game over!!! {{gameResult.text}}</p>
         </div>
@@ -35,4 +77,9 @@
         </div>
     </div>
 </section>
+<script src="socket.io/socket.io.js"></script>
+<script>
+
+</script>
+</body>
 

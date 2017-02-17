@@ -50,7 +50,7 @@
 
 /*æ¸¸æˆæè¿°---*/
 
-/*æ¸¸æˆåŠ¨ä½œ*/
+/*action for game*/
 .game__action {
     display: flex;
     justify-content: space-between;
@@ -73,6 +73,17 @@
 }
 
 /*æ¸¸æˆåŠ¨ä½œ---*/
+/*action for sign in*/
+.action__guest{
+    background-color: #1b9af7;
+}
+.action__login{
+    background-color: #0ffdff;
+}
+.action__register{
+    background-color: #8c58de;
+}
+
 
 p.result__text {
     height: 16px;
@@ -81,6 +92,26 @@ p.result__text {
     font-size: 16px;
     text-align: center;
 }
+
+/*profile*/
+
+.profile__form input{
+    line-height: 1.5;
+    font-size: 18px;
+}
+
+
+table{
+    text-align: center;
+    line-height: 1.5;
+    font-size: 14px;
+}
+th{
+    min-width: 150px;
+    text-align: left;
+    color: #a63e39;
+}
+/*profile---*/
 
 /*canvas*/
 .canvasWrap{
